@@ -1,0 +1,47 @@
+# Render "Blueprint": creates the API web service in one click (Render -> New -> Blueprint).
+# Secrets marked "sync: false" are asked for during setup – they never live in Git.
+services:
+  - type: web
+    name: estatehub-api
+    runtime: node
+    rootDir: server
+    plan: free
+    # --include=dev: TypeScript is a dev dependency and is needed to build
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_SECURE
+        value: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: IMAGEKIT_PRIVATE_KEY
+        sync: false
+      - key: IMAGEKIT_FOLDER
+        value: /estatehub/properties
+      - key: AI_HUB_ENABLED
+        value: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AI_MODEL
+        value: claude-haiku-5-5

@@ -1,0 +1,132 @@
+/*
+  CSS layer order: MUI styles live in the "mui" layer, before Tailwind utilities,
+  so a Tailwind class (e.g. className="mt-4") always wins over an MUI default.
+*/
+@layer theme, base, mui, components, utilities;
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ---------- Design tokens (shared by Tailwind, shadcn/ui and the MUI theme) ---------- */
+:root {
+  --radius: 0.625rem;
+
+  --background: #f7f8f6; /* cool lime-wash white */
+  --foreground: #16233b; /* indigo ink */
+  --card: #ffffff;
+  --card-foreground: #16233b;
+  --popover: #ffffff;
+  --popover-foreground: #16233b;
+  --primary: #1f5f5b; /* peacock teal – actions */
+  --primary-foreground: #ffffff;
+  --secondary: #e9eeeb;
+  --secondary-foreground: #16233b;
+  --muted: #eef1ef;
+  --muted-foreground: #5b6670;
+  --accent: #e3efec;
+  --accent-foreground: #16413e;
+  --marigold: #f2a007; /* price tags only */
+  --marigold-foreground: #2b1d00;
+  --destructive: #c2410c;
+  --success: #15803d;
+  --border: #dde3df;
+  --input: #cfd7d2;
+  --ring: #1f5f5b;
+}
+
+@theme inline {
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-marigold: var(--marigold);
+  --color-marigold-foreground: var(--marigold-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'tnum' 0;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Numbers in prices and stats line up nicely */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- The price tag (the one bold element of the design) ----------
+   Inside @layer components so Tailwind utilities (absolute, text-lg…) can still override it. */
+@layer components {
+  .price-tag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--marigold);
+    color: var(--marigold-foreground);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    padding: 0.3rem 0.7rem 0.3rem 1.15rem;
+    border-radius: 0 6px 6px 0;
+    clip-path: polygon(0.6rem 0, 100% 0, 100% 100%, 0.6rem 100%, 0 50%);
+    line-height: 1.2;
+  }
+  .price-tag::before {
+    /* the punched hole of a real price tag */
+    content: '';
+    position: absolute;
+    left: 0.55rem;
+    top: 50%;
+    width: 0.32rem;
+    height: 0.32rem;
+    margin-top: -0.16rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.85);
+  }
+}
